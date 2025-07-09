@@ -1,13 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WebConcessionnaire.API.Models;
+﻿using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace WebConcessionnaire.API.Data
 {
-    public class ApiDbContext: DbContext
+    public class ApiDbContext
     {
-        public ApiDbContext(DbContextOptions<ApiDbContext> options)
-       : base(options) { }
+        private readonly IConfiguration _configuration;
+        private readonly string connectionString;
 
-        public DbSet<Concessionnaire> Concessionnaires { get; set; }
+        public ApiDbContext(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            connectionString = _configuration.GetConnectionString("ApiConnexionString");
+        }
+
+        public IDbConnection CreateConnection() => new SqlConnection(connectionString);
+        
     }
 }

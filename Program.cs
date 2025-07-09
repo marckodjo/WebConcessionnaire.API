@@ -1,25 +1,21 @@
 
-using Microsoft.EntityFrameworkCore;
 using WebConcessionnaire.API.Data;
+using WebConcessionnaire.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Services.AddDbContext<ApiDbContext>(options =>
-//    options. ("Data Source=concessionnaire.db"));
-
-builder.Services.AddDbContext<ApiDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ApiConnexionString")));
-
-
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+builder.Services.AddTransient<ApiDbContext>();
+
 builder.Services.AddOpenApi();
 builder.Services.AddOpenApiDocument(config =>
 {
     config.Title = "Concessionnaire";
     config.Version = "v1";
 });
+
+builder.Services.AddScoped<IConcessionnaireRepository, ConcessionnaireRepository>();
 
 var app = builder.Build();
 
